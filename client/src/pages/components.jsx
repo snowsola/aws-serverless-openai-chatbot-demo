@@ -15,7 +15,7 @@ import Divider from '@mui/material/Divider';
 import {Stack,FormControl,InputLabel,Select,MenuItem,Slider} from '@mui/material';
 
 const drawerWidth = 300;
-const models = ['text-davinci-003','code-davinci-002'];
+const models = ['gpt-3.5-turbo'];
 
 export const modelParamsCtx = React.createContext();
 export const useModelParams =()=>{
@@ -35,7 +35,7 @@ const CustSlider = ({name,label,desc,min,max,defaultValue,step,setModelParams})=
   const [value,setValue] = React.useState(defaultValue);
   return (
     <Box>
-        <Box 
+        <Box
         sx={{
           display: 'flex',
           justifyContent: 'space-between',
@@ -74,7 +74,7 @@ const ToolBox =({toggleDrawer,setModelParams})=>{
     aria-label="setting panel"
   >
       <Toolbar sx={{ justifyContent: "flex-end" }}>
-      <IconButton aria-label="back" edge="start" color="inherit" 
+      <IconButton aria-label="back" edge="start" color="inherit"
           onClick={toggleDrawer(false)}
           size="small">
           <CloseIcon sx={{ color: grey[900] }}/>
@@ -83,7 +83,7 @@ const ToolBox =({toggleDrawer,setModelParams})=>{
       <Divider />
       <Stack direction="column" spacing={3} sx={{ alignItems: "stretch",m:2}}>
       <Box sx={{ textAlign: 'center',fontSize: 'h6.fontSize' }}>
-         {"Change model settings"} 
+         {"Change model settings"}
       </Box>
       <FormControl variant="filled" sx={{ m: 1, minWidth: 120 }}>
         <InputLabel id="model-select-label">{"Model"}</InputLabel>
@@ -192,7 +192,7 @@ return (
           >
             <MenuIcon />
           </IconButton>
-          
+
 </Toolbar>
 
 

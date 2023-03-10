@@ -19,6 +19,7 @@ import { Formik, Form, useFormik } from "formik";
 import { useAuthorizedHeader } from "../commons/use-auth";
 import { useLocalStorage } from "../commons/localStorage";
 import botlogo from "../ai-logo.svg";
+import ReactMarkdown from 'react-markdown'
 
 
 function generateUniqueId(){
@@ -110,7 +111,7 @@ const ChatBox = ({ msgItems,loading }) => {
                 setLoaderTxt('.');
                 textContent='';
             }
-        }, 500);  
+        }, 500);
       return ()=>{
         if (interval) clearInterval(interval);
       }
@@ -128,12 +129,12 @@ const ChatBox = ({ msgItems,loading }) => {
   return (
 
   <List
-   sx={{ 
+   sx={{
         position: 'relative',
         overflow: 'auto',
         }}
   >
-  <MsgItem id={generateUniqueId()} who="AI" text ={"Welcome! Can I help you? 我还会中文以及其他999种语言"}/>
+  <MsgItem id={generateUniqueId()} who="AI" text ={"Welcome!"}/>
   {items}
   {loading? <MsgItem who={BOTNAME} text={loadingtext} />:<div/>}
   <ListItem ref={scrollRef} />
@@ -175,7 +176,7 @@ const InputSection = ({ setmsgItems,setLoading }) => {
             setLoading(false);
             setmsgItems((prev) => [...prev,{ id: generateUniqueId(), who:BOTNAME, text: data.bot.trimStart()}]
             );
-        }).catch(err =>{ 
+        }).catch(err =>{
             console.table(err);
             setLoading(false);　
             setConversations([]);
@@ -198,7 +199,7 @@ const InputSection = ({ setmsgItems,setLoading }) => {
             p: 1,
             bgcolor: grey[50],
             borderColor: grey[400],
-            
+
             // gridTemplateColumns: "24px auto auto",
             position:'fixed',
             width:'100%',
@@ -206,7 +207,7 @@ const InputSection = ({ setmsgItems,setLoading }) => {
             bottom:0,
           }}
         >
-        <IconButton aria-label="refresh" edge="start" color="info" 
+        <IconButton aria-label="refresh" edge="start" color="info"
               sx={{ ml: 0.25 }}
               onClick={()=>{
                 setConversations([]);
@@ -215,7 +216,7 @@ const InputSection = ({ setmsgItems,setLoading }) => {
               >
           <RestartAltIcon size="medium"/>
         </IconButton>
-          <OutlinedInput 
+          <OutlinedInput
             sx={{bgcolor: "white", flexGrow: 1, ml:0.5,mr:0.5}}
             value={formik.values.prompt}
             onChange={(event) => {
@@ -240,7 +241,7 @@ const ChatPage = () => {
 
 
   return (
-    <modelParamsCtx.Provider value={modelParams}> 
+    <modelParamsCtx.Provider value={modelParams}>
     <Stack direction="column" spacing={2} sx={{pb:5}}>
       <TopNavHeader setModelParams={setModelParams}/>
       <ChatBox  msgItems={msgItems}  loading={loading}/>

@@ -20,6 +20,8 @@ import { useAuthorizedHeader } from "../commons/use-auth";
 import { useLocalStorage } from "../commons/localStorage";
 import botlogo from "../ai-logo.svg";
 import ReactMarkdown from 'react-markdown'
+import {Prism as SyntaxHighlighter} from 'react-syntax-highlighter'
+import {oneDark} from 'react-syntax-highlighter/dist/esm/styles/prism'
 
 
 function generateUniqueId(){
@@ -72,7 +74,29 @@ const MsgItem = ({ who, text }) => {
     <ListItem>
       <Stack direction="row" spacing={2} sx={{ alignItems: "center" }}>
         <Avatar src={botlogo} alt={'AIBot'}/>
-        <TextItem> {newlines}</TextItem>
+        <TextItem>
+            <ReactMarkdown
+                children={text}
+                components={{
+                    code({node, inline, className, children, ...props}) {
+                        const match = /language-(\w+)/.exec(className || '')
+                        return !inline && match ? (
+                            <SyntaxHighlighter
+                                children={String(children).replace(/\n$/, '')}
+                                style={oneDark}
+                                language={match[1]}
+                                PreTag="div"
+                                {...props}
+                            />
+                        ) : (
+                            <code className={className} {...props}>
+                                {children}
+                            </code>
+                        )
+                    }
+                }}
+            />
+        </TextItem>
       </Stack>
     </ListItem>
   );

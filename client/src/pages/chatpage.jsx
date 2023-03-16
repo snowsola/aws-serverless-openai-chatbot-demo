@@ -170,6 +170,7 @@ const InputSection = ({ setmsgItems,setLoading }) => {
   const [local_stored_crediential,] = useLocalStorage('chat-login-token',null)
   const username = local_stored_crediential.username;
   const [conversations,setConversations] = useState([]);
+  const [inputLoading,setInputLoading] = useState(false);
   const modelParams = useModelParams();
   // console.log(modelParams);
   const authheader = useAuthorizedHeader();
@@ -192,17 +193,20 @@ const InputSection = ({ setmsgItems,setLoading }) => {
       const prompt = conversations.join(" ")+"\n"+values.prompt;
       formik.resetForm();
       setLoading(true);
+      setInputLoading(true);
       getAnswer(respid,prompt,modelParams,authheader)
         .then(data => {
             // console.log(data);
             //save conversations
             setConversations(prev=>[...prev,data.bot]);
             setLoading(false);
+            setInputLoading(false);
             setmsgItems((prev) => [...prev,{ id: generateUniqueId(), who:BOTNAME, text: data.bot.trimStart()}]
             );
         }).catch(err =>{
             console.table(err);
-            setLoading(false);　
+            setLoading(false);
+            setInputLoading(false);
             setConversations([]);
             setmsgItems((prev) => [...prev,{ id: generateUniqueId(), who:BOTNAME, text:'Ops! '+err.message}]);
         })
@@ -211,50 +215,52 @@ const InputSection = ({ setmsgItems,setLoading }) => {
 
   return (
     <Formik>
-      <Form onSubmit={formik.handleSubmit}>
-        <Box
-          sx={{
-            display: "flex",
-            direction:"row",
-            justifyContent:"space-between",
-            alignItems: "center",
+        {inputLoading === false?
+          <Form onSubmit={formik.handleSubmit}>
+            <Box
+              sx={{
+                display: "flex",
+                direction:"row",
+                justifyContent:"space-between",
+                alignItems: "center",
 
-            borderTop: 1,
-            p: 1,
-            bgcolor: grey[50],
-            borderColor: grey[400],
+                borderTop: 1,
+                p: 1,
+                bgcolor: grey[50],
+                borderColor: grey[400],
 
-            // gridTemplateColumns: "24px auto auto",
-            position:'fixed',
-            width:'100%',
-            // height:32,
-            bottom:0,
-          }}
-        >
-        <IconButton aria-label="refresh" edge="start" color="info"
-              sx={{ ml: 0.25 }}
-              onClick={()=>{
-                setConversations([]);
-                setmsgItems([]);
+                // gridTemplateColumns: "24px auto auto",
+                position:'fixed',
+                width:'100%',
+                // height:32,
+                bottom:0,
               }}
-              >
-          <RestartAltIcon size="medium"/>
-        </IconButton>
-          <OutlinedInput
-            sx={{bgcolor: "white", flexGrow: 1, ml:0.5,mr:0.5}}
-            value={formik.values.prompt}
-            onChange={(event) => {
-              formik.setValues({ prompt: event.target.value });
-            }}
-            multiline
-            placeholder="Please enter text"
-          />
-        <IconButton aria-label="send" edge="end" color="primary"  type="submit" sx={{ mr: 2 }}>
-          <SendIcon size="large"/>
-        </IconButton>
+            >
+            <IconButton aria-label="refresh" edge="start" color="info"
+                  sx={{ ml: 0.25 }}
+                  onClick={()=>{
+                    setConversations([]);
+                    setmsgItems([]);
+                  }}
+                  >
+              <RestartAltIcon size="medium"/>
+            </IconButton>
+              <OutlinedInput
+                sx={{bgcolor: "white", flexGrow: 1, ml:0.5,mr:0.5}}
+                value={formik.values.prompt}
+                onChange={(event) => {
+                  formik.setValues({ prompt: event.target.value });
+                }}
+                multiline
+                placeholder="Please enter text"
+              />
+            <IconButton aria-label="send" edge="end" color="primary"  type="submit" sx={{ mr: 2 }}>
+              <SendIcon size="large"/>
+            </IconButton>
 
-        </Box>
-      </Form>
+            </Box>
+          </Form>
+        : <div></div>}
     </Formik>
   );
 };
